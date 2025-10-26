@@ -10,19 +10,19 @@ void		print_matrix_size(t_matrix m)
 	printf("%d\n", m.col * m.row);
 }
 
-uint32_t	return_matrix_size(t_matrix m)
+uint32_t	matrix_size(t_matrix m)
 {
 	return (m.col * m.row)
 }
 
-void		is_matrix_squared(t_matrix m)
+bool		is_matrix_squared(t_matrix m)
 {
 	return (m.col == m.row);
 }
 
 void		print_matrix(t_matrix m)
 {
-	for (i = 0; i < m.row; i++) {
+	for (int i = 0; i < m.row; i++) {
 		for (j = 0; j < m.col; j++) {
 			printf("%f ", *(m.data + i * m.col + j));
 		printf("\n");
