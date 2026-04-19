@@ -1,0 +1,40 @@
+# =========================
+# Variables
+# =========================
+CC = gcc
+CFLAGS = -Wall -Wextra -std=c99 -I../include
+
+SRC = main.c exercice00.c ../utils/vector.c ../utils/matrix.c
+OBJ_DIR = ./obj
+OBJ = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
+
+EXEC = exercice00
+
+# =========================
+# Cible par défaut
+# =========================
+all: $(EXEC)
+
+# =========================
+# Linkage de l'exécutable
+# =========================
+$(EXEC): $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $^
+
+# =========================
+# Compilation des .c en .o dans obj/
+# =========================
+$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Création du dossier obj/ s'il n'existe pas
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
+# =========================
+# Nettoyage
+# =========================
+clean:
+	rm -rf $(OBJ_DIR) $(EXEC)
+
+.PHONY: all clean
