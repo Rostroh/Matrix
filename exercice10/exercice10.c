@@ -23,7 +23,7 @@ void	*ft_memdup(const void *src, size_t len)
 	return (dst);
 }
 
-t_matrix	row_echelon(t_matrix m1)
+t_matrix	row_echelon2(t_matrix m1)
 {
 	double		factor;
 	uint32_t	col_id = 0;

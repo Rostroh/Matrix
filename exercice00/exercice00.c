@@ -18,7 +18,6 @@ t_vector	sub_vector(t_vector v1, t_vector v2)
 {
 	if (v1.dim != v2.dim)
 	{
-		printf("Vectors dimensions must be the same\n");
 		v1.dim = 0;
 		return (v1);
 	}

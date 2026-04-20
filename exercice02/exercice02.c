@@ -18,10 +18,8 @@ t_vector	lerp_vector(t_vector a, t_vector b, double t)
 		return (v);
 	}
 	v.dim = a.dim;
-	printf("Ola\n");
 	v.data = (double*)malloc(sizeof(double) * v.dim);
 	for (int i = 0; i < v.dim; i++) {
-		printf("%f - %f\n", b.data[i], a.data[i]);
 		v.data[i] = fma(b.data[i] - a.data[i], t, a.data[i]);
 	}
 	return (v);

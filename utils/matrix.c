@@ -56,7 +56,7 @@ t_matrix create_matrix(int row, int col, ...)
     	t_matrix m;
     	m.row = row;
     	m.col = col;
-	
+
     	m.data = malloc(row * col * sizeof(double));
 	va_list args;
     	va_start(args, col); 

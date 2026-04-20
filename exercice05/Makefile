@@ -12,7 +12,7 @@ OBJS := $(SRCS:.c=.o)
 
 # Compilateur et options
 CC := gcc
-CFLAGS := -I$(INCLUDE_DIR)
+CFLAGS := -I$(INCLUDE_DIR) -lm
 
 # === Règles ===
 all: $(EXE)

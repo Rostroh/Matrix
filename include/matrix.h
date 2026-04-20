@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <math.h>
+#include <stdint.h>
 
 typedef struct		s_vector
 {
