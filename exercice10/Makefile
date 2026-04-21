@@ -7,7 +7,7 @@ INCLUDE_DIR := ../include
 UTILS_DIR := ../utils
 
 # Fichiers sources
-SRCS := $(wildcard *.c) $(wildcard $(UTILS_DIR)/*.c)
+SRCS := main.c exercice10.c $(UTILS_DIR)/vector.c $(UTILS_DIR)/matrix.c
 OBJS := $(SRCS:.c=.o)
 
 # Compilateur et options
@@ -20,24 +20,16 @@ all: $(EXE)
 $(EXE): $(OBJS)
 	$(CC) -o $@ $(CFLAGS) $(OBJS)
 
-# Règle générique pour les .o
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Nettoyer les fichiers objets
 clean:
 	rm -f $(OBJS)
 
-# Nettoyer + exécutable
 fclean: clean
 	rm -f $(EXE)
 
-# Tout reconstruire
 re: fclean all
-
-# Lancer le programme
-run: $(EXE)
-	./$(EXE)
 
 # Éviter les conflits avec des fichiers du même nom
 .PHONY: all clean fclean re run

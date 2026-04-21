@@ -11,7 +11,7 @@ void	print_vector(t_vector v)
 	for (int i = 0; i < v.dim; i++) {
 		printf("%f", *(v.data + i));
 		if (i + i < v.dim)
-			printf(" ");
+			printf("\n");
 	}
 	printf("}\n");
 }

@@ -1,6 +1,6 @@
 #include "matrix.h"
 
-void	*ft_memcpy(double *dst, const double *src, size_t n)
+static void	*ft_memcpy(double *dst, const double *src, size_t n)
 {
 	size_t	i;
 
@@ -13,146 +13,85 @@ void	*ft_memcpy(double *dst, const double *src, size_t n)
 	return (dst);
 }
 
-void	*ft_memdup(const void *src, size_t len)
+static void	*ft_memdup(const double *src, size_t len)
 {
 	void	*dst;
 
-	dst = (void *)malloc(sizeof(void) * len);
+	dst = (void *)malloc(sizeof(double) * len);
 	if (dst != NULL)
 		dst = ft_memcpy(dst, src, len);
 	return (dst);
 }
 
-t_matrix	row_echelon2(t_matrix m1)
+static int	find_first_non_null(t_matrix m, int col, int row)
 {
-	double		factor;
-	uint32_t	col_id = 0;
-	double		pivot = 0;
-	t_matrix	m2;
-	uint32_t	cur;
+	int	j = row;
 
-	m2.row = m1.row;
-	m2.col = m1.col;
-	m2.data = (double *)malloc(sizeof(double) * m2.row * m2.col);
-	for (int i = 0; i < m1.row * m1.col; i++)
-		*(m2.data + i) = *(m1.data + i);
-	for (int r = 0; r < m2.row; r++)
+	if (col >= m.col)
+		return (-1);
+	for (j; j < m.row; j++)
 	{
-		//int r = 0;
-		int i = r;
-	//	printf("\n\n ITTERATION %d\n", r);
-		while (*(m2.data + i * m2.col + col_id) == 0) {
-            		i++;
-            		if (i == m2.row) {
-                		i = r;
-               			col_id++;
-                		if (col_id == m2.col)
-                    			return m2;
-            		}
-		}
-	//	printf("Col_id = %u i = %u et r = %d\n", col_id, i, r);
-		if (i != r) {
-	//		printf("           ---------------SWAP----------------\n");
-			double *tmp = (double *)ft_memdup(m2.data + i * m2.col, m2.col);
-			ft_memcpy(m2.data + i * m2.col, m2.data + r * m2.col, m2.col);
-			ft_memcpy(m2.data + r * m2.col, tmp, m2.col);
-		}
-	//	if (pivot == 0)
-		pivot = *(m2.data + r * m2.col + col_id);
-	//	printf("pivot [%f] (%d) = [%f]\n", *(m2.data + r * m2.col + col_id), r * m2.col + col_id, pivot);
-		for (int j = col_id; j < m2.col; j++)
-			*(m2.data + r * m2.col + j) = *(m2.data + r * m2.col + j) / pivot;
-	//	printf("Apres pivotage:\n");
-		//if (r != 0) {
-			for (int t = 0; t < r; t++)
-			{
-				factor = *(m2.data + t * m2.col + col_id) / *(m2.data + r * m2.col + col_id);
-				for (int l = col_id; l < m2.col; l++) {
-					*(m2.data + t * m2.col + l) = *(m2.data + t * m2.col + l) - factor * *(m2.data + r * m2.col + l);
-				}
-			}
-		//}
-		int k = i + 1;
-		while (k < m2.row) {
-			while (*(m2.data + k * m2.col + col_id) == 0) {
-            			k++;
-            			if (k == m2.row) {
-                			k = r;
-               				col_id++;
-                			if (col_id == m2.col)
-                    				return m2;
-            			}
-			}
-			//printf("Ola %f\n", *(m2.data + k * m2.col + col_id));
-			//printf("Col+1_id = %u %d %d\n", col_id, k, r);
-			factor = *(m2.data + k * m2.col + col_id) / *(m2.data + r * m2.col + col_id);
-			if (isnan(factor) || isinf(factor))
-				break ;
-			//printf("factor [%f](%d) / [%f](%d) = %f\n", *(m2.data + k * m2.col + col_id), k * m2.col + col_id, *(m2.data + r * m2.col + col_id), r * m2.col + col_id, factor);
-			for (int j = col_id; j < m2.col; j++) {
-			//	printf("l2 [%f](%d) - factor [%f] l1 [%f](%d) = [%f]\n", *(m2.data + k * m2.col + j), k * m2.col + j, factor, *(m2.data + k * col_id + j), i * m2.col + j, *(m2.data + i * m2.col + j) - factor * *(m2.data + k * m2.col + j));
-				*(m2.data + k * m2.col + j) = *(m2.data + k * m2.col + j) - factor * *(m2.data + i * m2.col + j);
-			//	printf("ret[%d] = %f\n", k * m2.col + j, *(m2.data + k * m2.col + j));
-			}
-			k++;
-		}
-	//	printf("i = %d r = %d row = %d\n", i, r, m1.row);
+		if (*(m.data + j * m.col + col) != 0)
+			return (j);
 	}
-	return (m2);
+	return (-1);
 }
 
-t_matrix	ref(t_matrix m1)
+void	swap(t_matrix m, int r1, int r2)
 {
-	double		factor;
-	uint32_t	col_id = 0;
-	double		pivot = 0;
-	t_matrix	m2;
-	uint32_t	cur;
+	double *tmp = (double *)ft_memdup(m.data + r1 * m.col, m.col);
+	ft_memcpy(m.data + r1 * m.col, m.data + r2 * m.col, m.col);
+	ft_memcpy(m.data + r2 * m.col, tmp, m.col);
+	free(tmp);
+}
 
-	m2.row = m1.row;
-	m2.col = m1.col;
-	m2.data = (double *)malloc(sizeof(double) * m2.row * m2.col);
-	for (int i = 0; i < m1.row * m1.col; i++)
-		*(m2.data + i) = *(m1.data + i);
-	for (int r = 0; r < m2.row; r++)
+void		reduce_line(t_matrix m, int col, int row)
+{
+	double pivot = *(m.data + row * m.col + col);
+	
+	for (int i = col; i < m.col; i++)
+		*(m.data + row * m.col + i) /= pivot;
+}
+
+void		substraction(t_matrix m, int r1, int r2, double scalar)
+{
+	for (int i = 0; i < m.col; i++)
 	{
-		int i = r;
-		while (*(m2.data + i * m2.col + col_id) == 0) {
-            		i++;
-            		if (i == m2.row) {
-                		i = r;
-               			col_id++;
-                		if (col_id == m2.col)
-                    			return m2;
-            		}
-		}
-		if (i != r) {
-			double *tmp = (double *)ft_memdup(m2.data + i * m2.col, m2.col);
-			ft_memcpy(m2.data + i * m2.col, m2.data + r * m2.col, m2.col);
-			ft_memcpy(m2.data + r * m2.col, tmp, m2.col);
-		}
-		pivot = *(m2.data + r * m2.col + col_id);
-		//for (int j = col_id; j < m2.col; j++)
-		//	*(m2.data + r * m2.col + j) = *(m2.data + r * m2.col + j) / pivot;
-		int k = i + 1;
-		while (k < m2.row) {
-			while (*(m2.data + k * m2.col + col_id) == 0) {
-            			k++;
-            			if (k == m2.row) {
-                			k = r;
-               				col_id++;
-                			if (col_id == m2.col)
-                    				return m2;
-            			}
-			}
-			factor = *(m2.data + k * m2.col + col_id) / *(m2.data + r * m2.col + col_id);
-			if (isnan(factor) || isinf(factor))
-				break ;
-			for (int j = col_id; j < m2.col; j++) {
-				*(m2.data + k * m2.col + j) = *(m2.data + k * m2.col + j) - factor * *(m2.data + i * m2.col + j);
-			}
-			k++;
+		*(m.data + r1 * m.col + i) -= *(m.data + r2 * m.col + i) * scalar;
+	}
+}
+
+void		subs_line(t_matrix m, int col, int row)
+{
+	double	scalar = 0.;
+
+	for (int j = 0; j < m.row; j++)
+	{
+		if (j != row)
+		{
+			scalar = *(m.data + j * m.col + col);
+			substraction(m, j, row, scalar);
 		}
 	}
-	return (m2);
+}
+
+t_matrix	row_echelon(t_matrix m1)
+{
+	int	r;
+	int	k;
+
+	r = 0;
+	for (int i = 0; i < m1.col; i++)
+	{
+		while ((k = find_first_non_null(m1, i, r)) == -1 && i < m1.col)
+			i++;
+		if (i >= m1.col || r >= m1.row)
+			return (m1);
+		if (r != k && k != -1)
+			swap(m1, r, k);
+		reduce_line(m1, i, r);
+		subs_line(m1, i, r);
+		r++;
+	}
+	return (m1);
 }

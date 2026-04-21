@@ -2,7 +2,6 @@
 
 static double 	recur(double *col, double *coef, uint32_t idx, uint32_t rate, double ret)
 {
-	//printf("%f %f\n", *(col + idx), *(coef + idx * rate));
 	if (idx == 0) {
 		return (fma(*col, *coef, ret));
 	}

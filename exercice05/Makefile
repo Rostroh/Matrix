@@ -1,13 +1,16 @@
 # === Configuration ===
-# Nom de l'exécutable (automatiquement basé sur le nom du dossier)
 EXE := $(notdir $(CURDIR))
 
 # Dossiers
 INCLUDE_DIR := ../include
 UTILS_DIR := ../utils
 
+# Chemin
+PATH03 :=../exercice03/
+PATH04 :=../exercice04/
+
 # Fichiers sources
-SRCS := $(wildcard *.c) $(wildcard $(UTILS_DIR)/*.c)
+SRCS := main.c exercice05.c $(UTILS_DIR)/vector.c $(UTILS_DIR)/matrix.c
 OBJS := $(SRCS:.c=.o)
 
 # Compilateur et options
@@ -18,7 +21,9 @@ CFLAGS := -I$(INCLUDE_DIR) -lm
 all: $(EXE)
 
 $(EXE): $(OBJS)
-	$(CC) -o $@ $(CFLAGS) $(OBJS) ../exercice03/exercice03.o ../exercice04/exercice04.o
+	$(MAKE) -C $(PATH03)
+	$(MAKE) -C $(PATH04)
+	$(CC) -o $@ $(CFLAGS) $(OBJS) $(PATH03)/exercice03.o $(PATH04)/exercice04.o
 
 # Règle générique pour les .o
 %.o: %.c
@@ -26,18 +31,17 @@ $(EXE): $(OBJS)
 
 # Nettoyer les fichiers objets
 clean:
+	$(MAKE) -C $(PATH03) clean
+	$(MAKE) -C $(PATH04) clean
 	rm -f $(OBJS)
 
 # Nettoyer + exécutable
 fclean: clean
+	$(MAKE) -C $(PATH03) fclean
+	$(MAKE) -C $(PATH04) fclean
 	rm -f $(EXE)
 
-# Tout reconstruire
 re: fclean all
-
-# Lancer le programme
-run: $(EXE)
-	./$(EXE)
 
 # Éviter les conflits avec des fichiers du même nom
 .PHONY: all clean fclean re run
